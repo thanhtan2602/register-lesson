@@ -11,10 +11,11 @@ const CRON_USER = process.env.CRON_USER;
 const CRON_PASS = process.env.CRON_PASS;
 
 const LESSON_IDS = [
-    "4e2d6776-a8d4-4a63-b68c-191781e324ce", // Communicate 1
-    "03a768ff-04b4-4eca-a76f-0b941bd947e2", // Communicate 2
-    "c2dac675-3a1c-4873-be55-efa967c23430", // Free Talk
-    "2255de13-81a3-4097-bd35-009c9e541309", // Skill
+    "107a6eac-f735-4301-a9d4-0da67b819f45", // Communicate 1
+    "6179ba58-8da1-4964-a7d0-42ba68e6189d", // Communicate 2
+    "3740d831-3962-4ce1-9b2b-8067229169c1", // Communicate 3
+    "8a1fa690-0d83-41bc-a11b-63bb288fee13", // Free Talk
+    "1489b6ac-d4ad-4a9b-b834-6a19d73b097a", // Skill
 ];
 
 async function retryRequest(fn, retries = 3, delay = 2000) {
@@ -41,53 +42,52 @@ async function retryRequest(fn, retries = 3, delay = 2000) {
 
 app.get("/run-all", async (req, res) => {
     try {
-		const results = [];
-        // const { data: loginData } = await axios.post(LOGIN_URL, {
-            // username: CRON_USER,
-            // password: CRON_PASS,
-        // });
+        const { data: loginData } = await axios.post(LOGIN_URL, {
+            username: CRON_USER,
+            password: CRON_PASS,
+        });
 
-        // const token = loginData.data?.token;
-        // if (!token) throw new Error("Cannot obtain auth token");
+        const token = loginData.data?.token;
+        if (!token) throw new Error("Cannot obtain auth token");
 
-        // console.log("Login successful. Token obtained.");
+        console.log("Login successful. Token obtained.");
 
-        // const results = [];
+        const results = [];
 
-        // for (const id of LESSON_IDS) {
-            // try {
-                // const { data } = await retryRequest(
-                    // () =>
-                        // axios.post(
-                            // REGISTER_URL,
-                            // { lessonId: id },
-                            // {
-                                // headers: {
-                                    // Authorization: `Bearer ${token}`,
-                                    // "Content-Type": "application/json",
-                                    // Origin: "https://student.talkfirst.vn",
-                                    // Referer: "https://student.talkfirst.vn/",
-                                // },
-                                // timeout: 10000,
-                            // }
-                        // ),
-                    // 3,
-                    // 2000
-                // );
+        for (const id of LESSON_IDS) {
+            try {
+                const { data } = await retryRequest(
+                    () =>
+                        axios.post(
+                            REGISTER_URL,
+                            { lessonId: id },
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                    "Content-Type": "application/json",
+                                    Origin: "https://student.talkfirst.vn",
+                                    Referer: "https://student.talkfirst.vn/",
+                                },
+                                timeout: 10000,
+                            }
+                        ),
+                    3,
+                    2000
+                );
 
-                // console.log(`Success: ${id}`);
-                // results.push({ lessonId: id, status: "OK", data });
-            // } catch (err) {
-                // const errorMsg = err.response?.data || err.message;
-                // console.error(`Failed: ${id}`, errorMsg);
+                console.log(`Success: ${id}`);
+                results.push({ lessonId: id, status: "OK", data });
+            } catch (err) {
+                const errorMsg = err.response?.data || err.message;
+                console.error(`Failed: ${id}`, errorMsg);
 
-                // results.push({
-                    // lessonId: id,
-                    // status: "FAIL",
-                    // error: errorMsg,
-                // });
-            // }
-        // }
+                results.push({
+                    lessonId: id,
+                    status: "FAIL",
+                    error: errorMsg,
+                });
+            }
+        }
 
         res.json({
             success: true,
