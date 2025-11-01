@@ -41,56 +41,56 @@ async function retryRequest(fn, retries = 3, delay = 2000) {
 
 app.get("/run-all", async (req, res) => {
     try {
-        const { data: loginData } = await axios.post(LOGIN_URL, {
-            username: CRON_USER,
-            password: CRON_PASS,
-        });
+        // const { data: loginData } = await axios.post(LOGIN_URL, {
+            // username: CRON_USER,
+            // password: CRON_PASS,
+        // });
 
-        const token = loginData.data?.token;
-        if (!token) throw new Error("Cannot obtain auth token");
+        // const token = loginData.data?.token;
+        // if (!token) throw new Error("Cannot obtain auth token");
 
-        console.log("Login successful. Token obtained.");
+        // console.log("Login successful. Token obtained.");
 
-        const results = [];
+        // const results = [];
 
-        for (const id of LESSON_IDS) {
-            try {
-                const { data } = await retryRequest(
-                    () =>
-                        axios.post(
-                            REGISTER_URL,
-                            { lessonId: id },
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${token}`,
-                                    "Content-Type": "application/json",
-                                    Origin: "https://student.talkfirst.vn",
-                                    Referer: "https://student.talkfirst.vn/",
-                                },
-                                timeout: 10000,
-                            }
-                        ),
-                    3,
-                    2000
-                );
+        // for (const id of LESSON_IDS) {
+            // try {
+                // const { data } = await retryRequest(
+                    // () =>
+                        // axios.post(
+                            // REGISTER_URL,
+                            // { lessonId: id },
+                            // {
+                                // headers: {
+                                    // Authorization: `Bearer ${token}`,
+                                    // "Content-Type": "application/json",
+                                    // Origin: "https://student.talkfirst.vn",
+                                    // Referer: "https://student.talkfirst.vn/",
+                                // },
+                                // timeout: 10000,
+                            // }
+                        // ),
+                    // 3,
+                    // 2000
+                // );
 
-                console.log(`Success: ${id}`);
-                results.push({ lessonId: id, status: "OK", data });
-            } catch (err) {
-                const errorMsg = err.response?.data || err.message;
-                console.error(`Failed: ${id}`, errorMsg);
+                // console.log(`Success: ${id}`);
+                // results.push({ lessonId: id, status: "OK", data });
+            // } catch (err) {
+                // const errorMsg = err.response?.data || err.message;
+                // console.error(`Failed: ${id}`, errorMsg);
 
-                results.push({
-                    lessonId: id,
-                    status: "FAIL",
-                    error: errorMsg,
-                });
-            }
-        }
+                // results.push({
+                    // lessonId: id,
+                    // status: "FAIL",
+                    // error: errorMsg,
+                // });
+            // }
+        // }
 
         res.json({
             success: true,
-            message: "Done",
+            message: "Done Test",
             results,
         });
     } catch (error) {
