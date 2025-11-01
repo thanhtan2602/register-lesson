@@ -41,6 +41,7 @@ async function retryRequest(fn, retries = 3, delay = 2000) {
 
 app.get("/run-all", async (req, res) => {
     try {
+		const results = [];
         // const { data: loginData } = await axios.post(LOGIN_URL, {
             // username: CRON_USER,
             // password: CRON_PASS,
