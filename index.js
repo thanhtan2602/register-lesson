@@ -11,11 +11,11 @@ const CRON_USER = process.env.CRON_USER;
 const CRON_PASS = process.env.CRON_PASS;
 
 const LESSON_IDS = [
-    "107a6eac-f735-4301-a9d4-0da67b819f45", // Communicate 1
-    "6179ba58-8da1-4964-a7d0-42ba68e6189d", // Communicate 2
-    "3740d831-3962-4ce1-9b2b-8067229169c1", // Communicate 3
-    "8a1fa690-0d83-41bc-a11b-63bb288fee13", // Free Talk
-    "1489b6ac-d4ad-4a9b-b834-6a19d73b097a", // Skill
+    "105ef6e7-6ef6-4239-9e6d-2b35274085d5", // Communicate 1
+    "a1e11854-2575-4548-9c4a-1c814c6c1689", // Communicate 2
+	"5864242b-7fd7-4b05-9cc2-b6615625a48b", // Communicate 3
+    "55a4f376-2a94-437c-87fc-24c1daefc678", // Free Talk
+    "97a67a8e-0160-4b2a-9333-5515d756ec1c", // Skill
 ];
 
 async function retryRequest(fn, retries = 3, delay = 2000) {
@@ -91,7 +91,7 @@ app.get("/run-all", async (req, res) => {
 
         res.json({
             success: true,
-            message: "Done Test",
+            message: "Done",
             results,
         });
     } catch (error) {
